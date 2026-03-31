@@ -27,6 +27,8 @@ public class Stock {
     @Column(nullable = false)
     private Integer quantity;
 
+    @Column
+    private Integer initialQuantity;
 
     @Column(nullable = false)
     private Double price;

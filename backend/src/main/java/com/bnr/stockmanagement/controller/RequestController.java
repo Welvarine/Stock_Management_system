@@ -41,6 +41,7 @@ public class RequestController {
         Request req = requestRepository.findById(id).orElse(null);
         if (req == null) return null;
         req.setStatus(body.status);
+        if (body.rejectionReason != null) req.setRejectionReason(body.rejectionReason);
         return requestRepository.save(req);
     }
 
@@ -51,6 +52,8 @@ public class RequestController {
 
     public static class StatusUpdate {
         public Request.Status status;
+        public String rejectionReason;
+        
     }
 }
 

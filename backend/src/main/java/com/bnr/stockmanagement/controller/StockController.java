@@ -48,6 +48,7 @@ public class StockController {
    public Stock create(@RequestBody Stock stock) {
         stock.setDeleted(false);
         stock.setDeletedAt(null);
+        if (stock.getInitialQuantity() == null) stock.setInitialQuantity(stock.getQuantity());
         return stockRepository.save(stock);
     }
     @PutMapping("/{id}")
@@ -59,6 +60,7 @@ public class StockController {
             oldStock.setQuantity(stock.getQuantity());
             oldStock.setPrice(stock.getPrice());
             oldStock.setStatus(stock.getStatus());
+            if (stock.getInitialQuantity() != null) oldStock.setInitialQuantity(stock.getInitialQuantity());
             return stockRepository.save(oldStock);
         }
         return null;

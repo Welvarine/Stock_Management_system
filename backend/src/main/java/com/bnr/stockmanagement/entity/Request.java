@@ -39,6 +39,9 @@ public class Request {
     @Column(nullable = false)
     private Status status = Status.Pending;
 
+    @Column
+    private String rejectionReason;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 
