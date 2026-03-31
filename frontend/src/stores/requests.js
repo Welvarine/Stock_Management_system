@@ -27,9 +27,11 @@ export const useRequestsStore = defineStore('requests', () => {
     }
   }
  
-  async function updateRequestStatus(id, newStatus) {
+  async function updateRequestStatus(id, newStatus, rejectionReason = null) {
     try {
-      const response = await api.put(`/requests/${id}/status`, { status: newStatus })
+      const payload = { status: newStatus }
+      if (rejectionReason) payload.rejectionReason = rejectionReason
+      const response = await api.put(`/requests/${id}/status`, payload)
       const idx = requests.value.findIndex(r => r.id === id)
       if (idx !== -1) requests.value[idx] = response.data
       return response.data

@@ -47,7 +47,8 @@
           <tr>
             <th>Item Name</th>
             <th>Quantity</th>
-            <th>Status</th> 
+            <th>Status</th>
+            <th>Rejection Reason</th>
           </tr>
         </thead>
         <tbody>
@@ -57,9 +58,10 @@
             <td>
               <span class="badge" :class="statusBadge(req.status)">{{ req.status }}</span>
             </td>
+            <td style="color: var(--danger);">{{ req.status === 'Rejected' ? (req.rejectionReason || '—') : '—' }}</td>
           </tr>
           <tr v-if="myRequests.length === 0">
-             <td colspan="3" style="text-align: center; color: var(--text-muted); padding: 2rem;">You haven't made any requests yet.</td>
+             <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 2rem;">You haven't made any requests yet.</td>
           </tr>
         </tbody>
       </table>

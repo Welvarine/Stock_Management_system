@@ -4,6 +4,7 @@ import { useAuthStore } from '../stores/auth'
 const routes = [
   { path: '/login', component: () => import('../views/LoginView.vue'), meta: { requiredRole: null } },
   { path: '/signup', component: () => import('../views/SignupView.vue'), meta: { requiredRole: null } },
+  { path: '/admin/dashboard', component: () => import('../views/AdminDashboardView.vue'), meta: { requiredRole: 'admin' } },
   { path: '/admin/inventory', component: () => import('../views/AdminInventoryView.vue'), meta: { requiredRole: 'admin' } },
   { path: '/requester/items', component: () => import('../views/RequesterView.vue'), meta: { requiredRole: 'requester' } },
   { path: '/approver/requests', component: () => import('../views/ApproverRequestsView.vue'), meta: { requiredRole: 'approver' } },

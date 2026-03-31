@@ -8,6 +8,7 @@ const count = ref(0)
 </script>
 
 <template>
+  <div>
   <section id="center">
     <div class="hero">
       <img :src="heroImg" class="base" width="170" height="179" alt="" />
@@ -90,4 +91,5 @@ const count = ref(0)
 
   <div class="ticks"></div>
   <section id="spacer"></section>
+  </div>
 </template>

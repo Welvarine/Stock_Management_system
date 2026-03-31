@@ -5,6 +5,7 @@
     </div>
     <nav class="nav-links">
       <template v-if="authStore.role === 'admin'">
+        <router-link to="/admin/dashboard">Dashboard</router-link>
         <router-link to="/admin/inventory">Inventory</router-link>
       </template>
       <template v-if="authStore.role === 'requester'">
