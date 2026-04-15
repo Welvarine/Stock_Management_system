@@ -5,7 +5,7 @@ import api from '../api/axios'
 export const useRequestsStore = defineStore('requests', () => {
   // Requests structure: { id, itemId, itemName, requesterName, quantity, status: 'Pending' | 'Approved' | 'Rejected' }
   const requests = ref([])
-
+// Fetch requests from the backend API with optional filters (e.g., by requester or status)
   async function fetchRequests(params = {}) {
     try {
       const response = await api.get('/requests/', { params })
@@ -15,7 +15,7 @@ export const useRequestsStore = defineStore('requests', () => {
       throw err
     }
   }
-
+// Add a new request to the backend API and update the local state
   async function addRequest(request) {
     try {
       const response = await api.post('/requests/', { ...request, status: 'Pending' })
