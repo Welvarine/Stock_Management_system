@@ -65,6 +65,7 @@
               <th>Requester</th>
               <th>Quantity</th>
               <th>Status</th>
+              <th>Rejection Reason</th>
             </tr>
           </thead>
           <tbody>
@@ -75,9 +76,10 @@
               <td>
                 <span class="badge" :class="req.status === 'Approved' ? 'badge-success' : 'badge-danger'">{{ req.status }}</span>
               </td>
+              <td style="color: var(--text-muted);">{{ req.rejectionReason || '-' }}</td>
             </tr>
              <tr v-if="completedRequests.length === 0">
-               <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 2rem;">No history found.</td>
+               <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">No history found.</td>
             </tr>
           </tbody>
         </table>
