@@ -68,20 +68,20 @@
               <th>Rejection Reason</th>
             </tr>
           </thead>
-          <tbody>
-            <tr v-for="req in completedRequests" :key="req.id">
-              <td style="font-weight: 600;">{{ req.itemName }}</td>
-              <td>{{ req.requesterName }}</td>
-              <td style="font-weight: 500;">{{ req.quantity }}</td>
-              <td>
-                <span class="badge" :class="req.status === 'Approved' ? 'badge-success' : 'badge-danger'">{{ req.status }}</span>
-              </td>
-              <td style="color: var(--text-muted);">{{ req.rejectionReason || '-' }}</td>
-            </tr>
-             <tr v-if="completedRequests.length === 0">
-               <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">No history found.</td>
-            </tr>
-          </tbody>
+         <tbody>
+  <tr v-for="req in completedRequests" :key="req.id">
+    <td style="font-weight: 600;">{{ req.itemName }}</td>
+    <td>{{ req.requesterName }}</td>
+    <td style="font-weight: 500;">{{ req.quantity }}</td>
+    <td>
+      <span class="badge" :class="req.status === 'Approved' ? 'badge-success' : 'badge-danger'">{{ req.status }}</span>
+    </td>
+    <td style="color: var(--text-muted);">{{ req.rejectionReason || '-' }}</td>
+  </tr>
+  <tr v-if="completedRequests.length === 0">
+    <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 2rem;">No history found.</td>
+  </tr>
+</tbody>
         </table>
       </div>
     </main>

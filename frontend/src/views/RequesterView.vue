@@ -62,8 +62,12 @@
             <tr>
               <th>Item Name</th>
               <th>Quantity</th>
+<<<<<<< HEAD
               <th>Status</th>
               <th>Rejection Reason</th>
+=======
+              <th>Status</th> 
+>>>>>>> ba464c3271dc5f0363e546e48fb1ff31e1210a6d
             </tr>
           </thead>
           <tbody>
@@ -73,10 +77,16 @@
               <td>
                 <span class="badge" :class="statusBadge(req.status)">{{ req.status }}</span>
               </td>
+<<<<<<< HEAD
               <td style="color: var(--text-muted);">{{ req.rejectionReason || '-' }}</td>
             </tr>
             <tr v-if="myRequests.length === 0">
                <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 2rem;">You haven't made any requests yet.</td>
+=======
+            </tr>
+            <tr v-if="myRequests.length === 0">
+               <td colspan="3" style="text-align: center; color: var(--text-muted); padding: 2rem;">You haven't made any requests yet.</td>
+>>>>>>> ba464c3271dc5f0363e546e48fb1ff31e1210a6d
             </tr>
           </tbody>
         </table>
