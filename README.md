@@ -1,4 +1,4 @@
-# BNR Stock Management System
+# Stock Management System
 
 This project is a secure IT stock management system with multi-role access control (Admin, Requester, Approver).
 
@@ -21,9 +21,9 @@ This project is a secure IT stock management system with multi-role access contr
 ### Backend Infrastructure
 - **Security (`SecurityConfig.java`)**:
   - **CSRF Disabled**: Spring Security's default CSRF protection was blocking POST requests (like "Add Item") because for local development, the frontend doesn't have a secure token. Disabling this allowed the frontend to talk to the backend.
-  - **CORS Enabled**: Configured the backend to explicitly allow traffic from `http://localhost:5173` (the Vite frontend), which by default is blocked by the browser's safety rules.
+  - **CORS Enabled**: Configured the backend to explicitly allow traffic from (the Vite frontend), which by default is blocked by the browser's safety rules.
 - **Diagnostics (Port Conflict Fix)**:
-  - Fixed a **Port 8080 collision** caused by an old instance of the application that didn't shut down properly.
+  - Fixed a **Port collision** caused by an old instance of the application that didn't shut down properly.
   - **Commands used (Windows)**:
     1.  `netstat -ano | findstr :8080` (Identified PID e.g. 4276)
     2.  `taskkill /F /PID 4276` (Terminated the process)
