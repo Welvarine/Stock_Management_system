@@ -36,7 +36,7 @@
                     @click="openRequestModal(item)" 
                     class="btn btn-primary btn-sm"
                     :disabled="item.status === 'Out of Stock' || item.status === 'Out_of_Stock'">
-                    <SendIcon :size="16" /> Request
+                    <SendIcon :size="16" /> 
                   </button>
                 </td>
               </tr>
