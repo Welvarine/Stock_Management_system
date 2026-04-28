@@ -6,9 +6,9 @@
     </div>
 
     <nav class="sidebar-nav">
-      <div v-for="link in links" :key="link.path" class="nav-item">
+      <div v-for="link in links" :key="link.label" class="nav-item">
         <router-link 
-          :to="link.path" 
+          :to="link.activeTab ? { path: link.path, query: { tab: link.activeTab } } : link.path" 
           class="nav-link" 
           :class="{ active: isLinkActive(link) }"
           @click="link.action ? link.action() : null"
@@ -56,10 +56,24 @@ const router = useRouter()
 const authStore = useAuthStore()
 
 const isLinkActive = (link) => {
+  const pathMatches = route.path === link.path
+  if (!pathMatches) return false
+
   if (link.activeTab) {
-    return route.path === link.path && route.query.tab === link.activeTab
+    const currentTab = route.query.tab
+    if (!currentTab) {
+      // Default tabs for each route
+      const defaults = {
+        '/admin/inventory': 'inventory',
+        '/approver/requests': 'pending',
+        '/requester/items': 'inventory'
+      }
+      return link.activeTab === defaults[route.path]
+    }
+    return currentTab === link.activeTab
   }
-  return route.path === link.path
+  
+  return !route.query.tab
 }
 
 const handleLogout = () => {
