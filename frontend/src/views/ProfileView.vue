@@ -1,5 +1,5 @@
 <template>
-  <div class="admin-layout">
+  <div class="admin-layout has-sidebar">
     <Sidebar :links="navLinks" />
 
     <main class="admin-content">

@@ -342,9 +342,59 @@ tr:hover {
   border: 1px solid var(--beige-mid);
 }
 
+/* Sidebar layout offset */
+.admin-layout.has-sidebar > .admin-content,
+.admin-layout.has-sidebar > .bnr-footer-bar {
+  margin-left: 110px;
+}
+
+.content-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.content-topbar .panel-title {
+  font-weight: 700;
+  color: var(--primary);
+  font-size: 1.15rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Icon action buttons for tables */
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: transparent;
+}
+.icon-btn:hover { transform: translateY(-1px); }
+.icon-btn.edit { color: var(--primary); background: rgba(107, 42, 0, 0.1); }
+.icon-btn.edit:hover { background: rgba(107, 42, 0, 0.2); }
+.icon-btn.delete { color: var(--danger); background: rgba(139, 23, 23, 0.1); }
+.icon-btn.delete:hover { background: rgba(139, 23, 23, 0.2); }
+.icon-btn.approve { color: var(--success); background: rgba(42, 107, 58, 0.1); }
+.icon-btn.approve:hover { background: rgba(42, 107, 58, 0.2); }
+.icon-btn.reject { color: var(--danger); background: rgba(139, 23, 23, 0.1); }
+.icon-btn.reject:hover { background: rgba(139, 23, 23, 0.2); }
+.icon-btn.restore { color: var(--success); background: rgba(42, 107, 58, 0.1); }
+.icon-btn.restore:hover { background: rgba(42, 107, 58, 0.2); }
+
 @media (max-width: 768px) {
   .login-page { flex-direction: column; }
   .login-bg { min-height: 300px; }
   .login-branding { padding: 2rem; }
   .bnr-topnav nav { display: none; }
+  .admin-layout.has-sidebar > .admin-content,
+  .admin-layout.has-sidebar > .bnr-footer-bar { margin-left: 0; }
 }

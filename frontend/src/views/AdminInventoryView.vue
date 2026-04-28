@@ -1,22 +1,15 @@
 <template>
-  <div class="admin-layout">
-    <!-- Top Navigation -->
-    <header class="bnr-topnav">
-      <div class="nav-brand">
-        <img :src="logo" alt="BNR Logo" />
-        <div class="brand-name">National Bank of Rwanda<br /><span style="font-size:0.82rem; font-weight:400;">Stock Management</span></div>
-      </div>
-      <nav>
-        <router-link to="/admin/dashboard">Dashboard</router-link>
-        <router-link to="/admin/inventory">Inventory</router-link>
-      </nav>
-      <div class="nav-user">
-        <span class="badge badge-primary" style="text-transform:capitalize;">{{ authStore.user?.username }} &bull; Admin</span>
-        <button @click="handleLogout" class="btn btn-outline btn-sm">Logout</button>
-      </div>
-    </header>
+  <div class="admin-layout has-sidebar">
+    <Sidebar :links="navLinks" />
 
     <main class="admin-content">
+      <div class="content-topbar">
+        <span class="panel-title">Manage Inventory</span>
+        <div class="nav-user">
+          <span class="badge badge-primary" style="text-transform:capitalize;">{{ authStore.user?.username }} &bull; Admin</span>
+        </div>
+      </div>
+
       <div class="page-header">
         <h2 class="admin-page-title">Manage Inventory</h2>
         <div class="header-actions" style="display: flex; align-items: center; gap: 1rem;">
@@ -61,8 +54,12 @@
               </td>
               <td>
                 <div style="display: flex; gap: 0.5rem;">
-                  <button @click="openEditModal(item)" class="btn btn-outline btn-sm">Edit</button>
-                  <button @click="deleteItem(item.id)" class="btn btn-danger btn-sm">Delete</button>
+                  <button @click="openEditModal(item)" class="icon-btn edit" title="Edit">
+                    <PencilIcon :size="18" />
+                  </button>
+                  <button @click="deleteItem(item.id)" class="icon-btn delete" title="Delete">
+                    <Trash2Icon :size="18" />
+                  </button>
                 </div>
               </td>
             </tr>
@@ -100,7 +97,9 @@
                 <span class="badge" :class="statusBadge(item.status)">{{ item.status }}</span>
               </td>
               <td>
-                <button @click="restoreItem(item.id)" class="btn btn-success btn-sm">Restore</button>
+                <button @click="restoreItem(item.id)" class="icon-btn restore" title="Restore">
+                  <RotateCcwIcon :size="18" />
+                </button>
               </td>
             </tr>
             <tr v-if="inventoryStore.deletedItems.length === 0">
@@ -155,13 +154,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useInventoryStore } from '../stores/inventory'
 import { useAuthStore } from '../stores/auth'
 import { useCurrencyStore } from '../stores/currency'
-import { PlusIcon } from 'lucide-vue-next'
-import logo from '../images/logo-light.png'
+import { PlusIcon, PencilIcon, Trash2Icon, RotateCcwIcon } from 'lucide-vue-next'
+import Sidebar from '../components/Sidebar.vue'
  
 const inventoryStore = useInventoryStore()
 const authStore = useAuthStore()
@@ -173,6 +172,12 @@ onMounted(() => {
   inventoryStore.fetchDeletedItems()
   currencyStore.fetchRates()
 })
+
+const navLinks = computed(() => [
+  { path: '/admin/dashboard', label: 'Stats', icon: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg>` },
+  { path: '/admin/inventory', label: 'Stock', icon: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 7h-4V5c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 5h4v2h-4V5zm10 15H4V9h16v11z"/></svg>` },
+  { path: '/profile', label: 'Profile', icon: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>` }
+])
 
 const showModal = ref(false)
 const isEditing = ref(false)
@@ -216,5 +221,4 @@ const saveItem = () => {
 
 const deleteItem = (id) => { if (confirm('Are you sure you want to delete this item?')) inventoryStore.deleteItem(id) }
 const restoreItem = (id) => { inventoryStore.restoreItem(id) }
-const handleLogout = () => { authStore.logout(); router.push('/login') }
 </script>

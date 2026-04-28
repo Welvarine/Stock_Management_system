@@ -1,21 +1,15 @@
 <template>
-  <div class="admin-layout">
-    <!-- Top Navigation -->
-    <header class="bnr-topnav">
-      <div class="nav-brand">
-        <img :src="logo" alt="BNR Logo" />
-        <div class="brand-name">National Bank of Rwanda<br /><span style="font-size:0.82rem; font-weight:400;">Stock Management</span></div>
-      </div>
-      <nav>
-        <span style="font-weight: 600; color: var(--primary); font-size: 1.1rem;">Approver Panel</span>
-      </nav>
-      <div class="nav-user">
-        <span class="badge badge-primary" style="text-transform:capitalize;">{{ authStore.user?.username }} &bull; Approver</span>
-        <button @click="handleLogout" class="btn btn-outline btn-sm">Logout</button>
-      </div>
-    </header>
+  <div class="admin-layout has-sidebar">
+    <Sidebar :links="navLinks" />
 
     <main class="admin-content">
+      <div class="content-topbar">
+        <span class="panel-title">Approver Panel</span>
+        <div class="nav-user">
+          <span class="badge badge-primary" style="text-transform:capitalize;">{{ authStore.user?.username }} &bull; Approver</span>
+        </div>
+      </div>
+
       <div class="page-header">
         <h2 class="admin-page-title">Pending Requests</h2>
       </div>
@@ -41,8 +35,12 @@
               </td>
               <td>
                 <div style="display: flex; gap: 0.5rem;">
-                  <button @click="approveRequest(req)" class="btn btn-success btn-sm">Approve</button>
-                  <button @click="openRejectModal(req.id)" class="btn btn-danger btn-sm">Reject</button>
+                  <button @click="approveRequest(req)" class="icon-btn approve" title="Approve">
+                    <CheckCircleIcon :size="18" />
+                  </button>
+                  <button @click="openRejectModal(req.id)" class="icon-btn reject" title="Reject">
+                    <XCircleIcon :size="18" />
+                  </button>
                 </div>
               </td>
             </tr>
@@ -124,7 +122,8 @@ import { useRouter } from 'vue-router'
 import { useRequestsStore } from '../stores/requests'
 import { useInventoryStore } from '../stores/inventory'
 import { useAuthStore } from '../stores/auth'
-import logo from '../images/logo-light.png'
+import { CheckCircleIcon, XCircleIcon } from 'lucide-vue-next'
+import Sidebar from '../components/Sidebar.vue'
 
 const requestsStore = useRequestsStore()
 const inventoryStore = useInventoryStore()
@@ -135,6 +134,11 @@ onMounted(() => {
   inventoryStore.fetchInventoryStore()
   requestsStore.fetchRequests()
 })
+
+const navLinks = computed(() => [
+  { path: '/approver/requests', label: 'Approvals', icon: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>` },
+  { path: '/profile', label: 'Profile', icon: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>` }
+])
 
 const pendingRequests = computed(() => requestsStore.requests.filter(r => r.status === 'Pending'))
 const completedRequests = computed(() => requestsStore.requests.filter(r => r.status !== 'Pending'))
@@ -173,6 +177,4 @@ const confirmReject = () => {
     .catch((err) => { alert('Failed to reject request: ' + (err.response?.data?.message || err.message)) })
   closeRejectModal()
 }
-
-const handleLogout = () => { authStore.logout(); router.push('/login') }
 </script>

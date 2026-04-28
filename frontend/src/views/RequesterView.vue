@@ -1,21 +1,15 @@
 <template>
-  <div class="admin-layout">
-    <!-- Top Navigation -->
-    <header class="bnr-topnav">
-      <div class="nav-brand">
-        <img :src="logo" alt="BNR Logo" />
-        <div class="brand-name">National Bank of Rwanda<br /><span style="font-size:0.82rem; font-weight:400;">Stock Management</span></div>
-      </div>
-      <nav>
-        <span style="font-weight: 600; color: var(--primary); font-size: 1.1rem;">Requester Panel</span>
-      </nav>
-      <div class="nav-user">
-        <span class="badge badge-primary" style="text-transform:capitalize;">{{ authStore.user?.username }} &bull; Requester</span>
-        <button @click="handleLogout" class="btn btn-outline btn-sm">Logout</button>
-      </div>
-    </header>
+  <div class="admin-layout has-sidebar">
+    <Sidebar :links="navLinks" />
 
     <main class="admin-content">
+      <div class="content-topbar">
+        <span class="panel-title">Requester Panel</span>
+        <div class="nav-user">
+          <span class="badge badge-primary" style="text-transform:capitalize;">{{ authStore.user?.username }} &bull; Requester</span>
+        </div>
+      </div>
+
       <div class="page-header">
         <h2 class="admin-page-title">Available Items</h2>
       </div>
@@ -40,7 +34,7 @@
                   @click="openRequestModal(item)" 
                   class="btn btn-primary btn-sm"
                   :disabled="item.status === 'Out of Stock' || item.status === 'Out_of_Stock'">
-                  Request Item
+                  <SendIcon :size="16" /> Request
                 </button>
               </td>
             </tr>
@@ -96,7 +90,7 @@
           </div>
           <div style="display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2.5rem;">
             <button type="button" @click="closeModal" class="btn btn-outline">Cancel</button>
-            <button type="submit" class="btn btn-primary">Submit Request</button>
+            <button type="submit" class="btn btn-primary"><SendIcon :size="16" /> Submit Request</button>
           </div>
         </form>
       </div>
@@ -112,7 +106,8 @@ import { useRouter } from 'vue-router'
 import { useInventoryStore } from '../stores/inventory'
 import { useRequestsStore } from '../stores/requests'
 import { useAuthStore } from '../stores/auth'
-import logo from '../images/logo-light.png'
+import { SendIcon } from 'lucide-vue-next'
+import Sidebar from '../components/Sidebar.vue'
 
 const inventoryStore = useInventoryStore()
 const requestsStore = useRequestsStore()
@@ -123,6 +118,11 @@ onMounted(() => {
   inventoryStore.fetchInventoryStore()
   requestsStore.fetchRequests({ requesterName: authStore.user?.username })
 })
+
+const navLinks = computed(() => [
+  { path: '/requester/items', label: 'Items', icon: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 7h-4V5c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 5h4v2h-4V5zm10 15H4V9h16v11z"/></svg>` },
+  { path: '/profile', label: 'Profile', icon: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>` }
+])
 
 const showModal = ref(false)
 const selectedItem = ref(null)
@@ -148,6 +148,4 @@ const submitRequest = () => {
   }).then(() => { alert('Request submitted successfully!'); closeModal() })
     .catch((err) => { alert('Failed to submit request: ' + (err.response?.data?.message || err.message)) })
 }
-
-const handleLogout = () => { authStore.logout(); router.push('/login') }
 </script>

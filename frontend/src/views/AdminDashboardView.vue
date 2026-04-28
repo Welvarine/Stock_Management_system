@@ -1,26 +1,15 @@
 <template>
-  <div class="admin-layout">
+  <div class="admin-layout has-sidebar">
+    <Sidebar :links="navLinks" />
 
-    <!-- Top Navigation -->
-    <header class="bnr-topnav">
-      <div class="nav-brand">
-        <img :src="logo" alt="BNR Logo" />
-        <div class="brand-name">National Bank of Rwanda<br /><span style="font-size:0.82rem; font-weight:400;">Stock Management</span></div>
-      </div>
-
-      <nav>
-        <router-link to="/admin/dashboard">Dashboard</router-link>
-        <router-link to="/admin/inventory">Inventory</router-link>
-      </nav>
-
-      <div class="nav-user">
-        <span class="badge badge-primary" style="text-transform:capitalize;">{{ authStore.user?.username }} &bull; Admin</span>
-        <button @click="handleLogout" class="btn btn-outline btn-sm">Logout</button>
-      </div>
-    </header>
-
-    <!-- Page Content -->
     <main class="admin-content">
+      <div class="content-topbar">
+        <span class="panel-title">Admin Dashboard</span>
+        <div class="nav-user">
+          <span class="badge badge-primary" style="text-transform:capitalize;">{{ authStore.user?.username }} &bull; Admin</span>
+        </div>
+      </div>
+
       <h2 class="admin-page-title">Admin Dashboard</h2>
 
       <!-- Stat Cards -->
@@ -69,7 +58,9 @@
             <option value="Low Stock">Low Stock</option>
             <option value="Out of Stock">Out of Stock</option>
           </select>
-          <button @click="exportToExcel" class="btn btn-success btn-sm">⬇ Export Excel</button>
+          <button @click="exportToExcel" class="btn btn-success btn-sm">
+            <DownloadIcon :size="16" /> Export Excel
+          </button>
         </div>
       </div>
 
@@ -117,7 +108,6 @@
       </div>
     </main>
 
-    <!-- Brown footer bar -->
     <div class="bnr-footer-bar"></div>
   </div>
 </template>
@@ -128,8 +118,9 @@ import { useRouter } from 'vue-router'
 import { useInventoryStore } from '../stores/inventory'
 import { useAuthStore } from '../stores/auth'
 import { useCurrencyStore } from '../stores/currency'
+import { DownloadIcon } from 'lucide-vue-next'
 import * as XLSX from 'xlsx'
-import logo from '../images/logo-light.png'
+import Sidebar from '../components/Sidebar.vue'
 
 const inventoryStore = useInventoryStore()
 const authStore = useAuthStore()
@@ -140,6 +131,12 @@ onMounted(() => {
   inventoryStore.fetchInventoryStore()
   currencyStore.fetchRates()
 })
+
+const navLinks = computed(() => [
+  { path: '/admin/dashboard', label: 'Stats', icon: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg>` },
+  { path: '/admin/inventory', label: 'Stock', icon: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 7h-4V5c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 5h4v2h-4V5zm10 15H4V9h16v11z"/></svg>` },
+  { path: '/profile', label: 'Profile', icon: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>` }
+])
 
 const search = ref('')
 const filterStatus = ref('')
@@ -182,6 +179,4 @@ const exportToExcel = () => {
   XLSX.utils.book_append_sheet(wb, ws, 'Stock Report')
   XLSX.writeFile(wb, `BNR_Stock_Report_${new Date().toISOString().slice(0,10)}.xlsx`)
 }
-
-const handleLogout = () => { authStore.logout(); router.push('/login') }
 </script>

@@ -9,6 +9,7 @@ const routes = [
   { path: '/admin/inventory', component: () => import('../views/AdminInventoryView.vue'), meta: { requiredRole: 'admin' } },
   { path: '/requester/items', component: () => import('../views/RequesterView.vue'), meta: { requiredRole: 'requester' } },
   { path: '/approver/requests', component: () => import('../views/ApproverRequestsView.vue'), meta: { requiredRole: 'approver' } },
+  { path: '/profile', component: () => import('../views/ProfileView.vue'), meta: { requiredRole: null } },
 ]
 
 const router = createRouter({
