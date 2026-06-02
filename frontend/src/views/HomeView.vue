@@ -18,11 +18,18 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '../stores/auth'
 import bgImage from '../images/bnrImage101.webp'
 import logo from '../images/logo-light.png'
 
 const router = useRouter()
+const authStore = useAuthStore()
+
+onMounted(() => {
+  // No automatic redirection, stay on landing page
+})
 
 const goToLogin = () => {
   router.push('/login')

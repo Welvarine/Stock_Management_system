@@ -31,7 +31,7 @@ export const useInventoryStore = defineStore('inventory', () => {
       inventoryItems.value.push(response.data)
     } catch (err) {
       console.error('Failed to add item:', err.response?.data || err.message)
-      alert('Error adding item: ' + (err.response?.data?.message || err.message))
+      throw err
     }
   }
 
@@ -43,7 +43,7 @@ export const useInventoryStore = defineStore('inventory', () => {
       if (index !== -1) inventoryItems.value[index] = response.data
     } catch (err) {
       console.error('Failed to update item:', err.response?.data || err.message)
-      alert('Error updating item: ' + (err.response?.data?.message || err.message))
+      throw err
     }
   }
   // Delete an inventory item
@@ -54,7 +54,7 @@ export const useInventoryStore = defineStore('inventory', () => {
       await fetchDeletedItems()
     } catch (err) {
       console.error('Failed to delete item:', err.response?.data || err.message)
-      alert('Error deleting item: ' + (err.response?.data?.message || err.message))
+      throw err
     }
   }
 
@@ -66,7 +66,6 @@ export const useInventoryStore = defineStore('inventory', () => {
       return response.data
     } catch (err) {
       console.error('Failed to restore item:', err.response?.data || err.message)
-      alert('Error restoring item: ' + (err.response?.data?.message || err.message))
       throw err
     }
   }

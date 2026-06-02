@@ -1,16 +1,17 @@
 <template>
   <div class="admin-layout has-sidebar">
-    <Sidebar :links="navLinks" />
+    <Sidebar />
 
     <main class="admin-content">
       <div class="content-topbar">
         <span class="panel-title">Admin Dashboard</span>
-        <div class="nav-user">
-          <span class="badge badge-primary" style="text-transform:capitalize;">{{ authStore.user?.username }} &bull; Admin</span>
+        <div class="nav-user" style="display: flex; align-items: center;">
+          <NotificationBell style="margin-right: 1.5rem;" />
+          <router-link to="/profile" class="badge badge-primary" style="text-transform:capitalize; text-decoration: none; cursor: pointer; display: inline-block;">
+            {{ authStore.user?.username }} &bull; Admin
+          </router-link>
         </div>
       </div>
-
-      <h2 class="admin-page-title">Admin Dashboard</h2>
 
       <!-- Stat Cards -->
       <div class="stat-cards">
@@ -38,7 +39,7 @@
 
       <!-- Stock Report Table -->
       <div class="section-header">
-        <h3>Stock Report</h3>
+        <h3 style="font-size: 1.8rem;">Stock Report</h3>
         <div style="display:flex; gap:0.75rem; align-items:center; flex-wrap:wrap;">
           <div style="display: flex; align-items: center; gap: 0.5rem;">
             <span style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">Currency:</span>
@@ -80,8 +81,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(item, index) in filteredItems" :key="item.id">
-              <td style="color:#7A5C3A;">{{ index + 1 }}</td>
+            <tr v-for="(item, index) in paginatedItems" :key="item.id">
+              <td style="color:#7A5C3A;">{{ (currentPage - 1) * itemsPerPage + index + 1 }}</td>
               <td style="font-weight:600;">{{ item.name }}</td>
               <td><span class="badge badge-primary">{{ item.category }}</span></td>
               <td>{{ currencyStore.symbol }} {{ currencyStore.convert(item.price) }}</td>
@@ -105,15 +106,18 @@
             </tr>
           </tfoot>
         </table>
+        <Pagination :currentPage="currentPage" :totalPages="totalPages" @update:currentPage="p => currentPage = p" />
+      </div>
+
+      <div class="bnr-footer-bar">
+        <span>© 2026 BNR Stock Management System. All rights reserved.</span>
       </div>
     </main>
-
-    <div class="bnr-footer-bar"></div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useInventoryStore } from '../stores/inventory'
 import { useAuthStore } from '../stores/auth'
@@ -121,6 +125,8 @@ import { useCurrencyStore } from '../stores/currency'
 import { DownloadIcon } from 'lucide-vue-next'
 import * as XLSX from 'xlsx'
 import Sidebar from '../components/Sidebar.vue'
+import NotificationBell from '../components/NotificationBell.vue'
+import Pagination from '../components/Pagination.vue'
 
 const inventoryStore = useInventoryStore()
 const authStore = useAuthStore()
@@ -132,12 +138,7 @@ onMounted(() => {
   currencyStore.fetchRates()
 })
 
-const navLinks = computed(() => [
-  { path: '/admin/dashboard', label: 'Stats', icon: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 9.2h3V19H5zM10.6 5h2.8v14h-2.8zm5.6 8H19v6h-2.8z"/></svg>` },
-  { path: '/admin/inventory', activeTab: 'inventory', label: 'Stock', icon: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 7h-4V5c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v2H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V9c0-1.1-.9-2-2-2zM10 5h4v2h-4V5zm10 15H4V9h16v11z"/></svg>` },
-  { path: '/admin/inventory', activeTab: 'trash', label: 'Trash', icon: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>` },
-  { path: '/profile', label: 'Profile', icon: `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>` }
-])
+
 
 const search = ref('')
 const filterStatus = ref('')
@@ -154,6 +155,19 @@ const filteredItems = computed(() =>
     return matchesSearch && matchesStatus
   })
 )
+
+const currentPage = ref(1)
+const itemsPerPage = 7
+
+const paginatedItems = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage
+  return filteredItems.value.slice(start, start + itemsPerPage)
+})
+const totalPages = computed(() => Math.ceil(filteredItems.value.length / itemsPerPage) || 1)
+
+watch([search, filterStatus], () => {
+  currentPage.value = 1
+})
 
 const totalValue = computed(() => filteredItems.value.reduce((s, i) => s + i.price * i.quantity, 0))
 const totalCurrentQty = computed(() => filteredItems.value.reduce((s, i) => s + i.quantity, 0))
