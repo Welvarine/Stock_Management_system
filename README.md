@@ -24,10 +24,7 @@ This project is a secure IT stock management system with multi-role access contr
   - **CORS Enabled**: Configured the backend to explicitly allow traffic from (the Vite frontend), which by default is blocked by the browser's safety rules.
 - **Diagnostics (Port Conflict Fix)**:
   - Fixed a **Port collision** caused by an old instance of the application that didn't shut down properly.
-  - **Commands used (Windows)**:
-    1.  `netstat -ano | findstr :8080` (Identified PID e.g. 4276)
-    2.  `taskkill /F /PID 4276` (Terminated the process)
-
+ 
 ## Tech Stack
 - **Frontend**: Vue 3 + Vite
 - **Backend**: Spring Boot 3 + Spring Security + PostgreSQL
