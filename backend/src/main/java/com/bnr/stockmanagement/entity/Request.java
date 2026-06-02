@@ -51,4 +51,35 @@ public class Request {
     public enum Status {
         Pending, Approved, Rejected
     }
+
+    // Explicit Getters and Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public Long getItemId() { return itemId; }
+    public void setItemId(Long itemId) { this.itemId = itemId; }
+    public String getItemName() { return itemName; }
+    public void setItemName(String itemName) { this.itemName = itemName; }
+    public String getRequesterName() { return requesterName; }
+    public void setRequesterName(String requesterName) { this.requesterName = requesterName; }
+    public Integer getQuantity() { return quantity; }
+    public void setQuantity(Integer quantity) { this.quantity = quantity; }
+    public Status getStatus() { return status; }
+    public void setStatus(Status status) { this.status = status; }
+    public String getRejectionReason() { return rejectionReason; }
+    public void setRejectionReason(String rejectionReason) { this.rejectionReason = rejectionReason; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+
+    // Manual Builder
+    public static RequestBuilder builder() { return new RequestBuilder(); }
+    public static class RequestBuilder {
+        private Request req = new Request();
+        public RequestBuilder id(Long id) { req.id = id; return this; }
+        public RequestBuilder itemId(Long itemId) { req.itemId = itemId; return this; }
+        public RequestBuilder itemName(String itemName) { req.itemName = itemName; return this; }
+        public RequestBuilder requesterName(String requesterName) { req.requesterName = requesterName; return this; }
+        public RequestBuilder quantity(Integer quantity) { req.quantity = quantity; return this; }
+        public RequestBuilder status(Status status) { req.status = status; return this; }
+        public Request build() { return req; }
+    }
 }
