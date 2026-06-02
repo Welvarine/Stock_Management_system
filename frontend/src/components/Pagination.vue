@@ -10,7 +10,7 @@
     
     <div class="pagination-numbers">
       <button 
-        v-for="page in totalPages" 
+        v-for="page in visiblePages" 
         :key="page" 
         class="page-number" 
         :class="{ active: currentPage === page }"
@@ -31,7 +31,9 @@
 </template>
 
 <script setup>
-defineProps({
+import { computed } from 'vue'
+
+const props = defineProps({
   currentPage: {
     type: Number,
     required: true
@@ -42,7 +44,32 @@ defineProps({
   }
 })
 
-defineEmits(['update:currentPage'])
+const emit = defineEmits(['update:currentPage'])
+
+const visiblePages = computed(() => {
+  const maxVisible = 3
+  const pages = []
+  
+  if (props.totalPages <= maxVisible) {
+    for (let i = 1; i <= props.totalPages; i++) {
+      pages.push(i)
+    }
+    return pages
+  }
+
+  let start = Math.max(1, props.currentPage - Math.floor(maxVisible / 2))
+  let end = start + maxVisible - 1
+
+  if (end > props.totalPages) {
+    end = props.totalPages
+    start = end - maxVisible + 1
+  }
+
+  for (let i = start; i <= end; i++) {
+    pages.push(i)
+  }
+  return pages
+})
 </script>
 
 <style scoped>
